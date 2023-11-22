@@ -2,7 +2,7 @@ package main
 
 import (
 	"chaincue-real-estate-go/internal/configs"
-	"chaincue-real-estate-go/internal/domains"
+	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/utilities"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/all", func(c *gin.Context) {
 		db := configs.GetDB()
-		var brokers []domains.Broker
+		var brokers []models.Broker
 		result := db.Find(&brokers)
 		if result.Error != nil {
 			c.JSON(500, gin.H{"error": result.Error.Error()})
@@ -28,7 +28,7 @@ func main() {
 
 	r.GET("/houses", func(c *gin.Context) {
 		db := configs.GetDB()
-		var houses []domains.House
+		var houses []models.House
 		result := db.Preload("HouseImages").Preload("Broker").Find(&houses)
 		if result.Error != nil {
 			c.JSON(500, gin.H{"error": result.Error.Error()})
@@ -51,23 +51,23 @@ func initData() {
 	}
 
 	/*Broker*/
-	broker := domains.NewBroker("d")
+	broker := models.NewBroker("d")
 	db.Create(broker)
 
 	/*Country*/
-	country1 := domains.NewCountry(domains.SWEDEN)
-	country2 := domains.NewCountry(domains.SPAIN)
+	country1 := models.NewCountry(models.SWEDEN)
+	country2 := models.NewCountry(models.SPAIN)
 	db.Create(country1)
 	db.Create(country2)
 
 	/*House*/
 	for i := 0; i < 18; i++ {
-		house := domains.NewHouse(domains.VILLA, utilities.URLFrontImage1)
+		house := models.NewHouse(models.VILLA, utilities.URLFrontImage1)
 		saveHouseWithImages(db, house, broker)
 	}
 }
 
-func saveHouseWithImages(db *gorm.DB, house *domains.House, broker *domains.Broker) {
+func saveHouseWithImages(db *gorm.DB, house *models.House, broker *models.Broker) {
 	house.Broker = broker
 	db.Create(house)
 
@@ -82,7 +82,7 @@ func saveHouseWithImages(db *gorm.DB, house *domains.House, broker *domains.Brok
 	}
 
 	for _, url := range imageURLs {
-		houseImage := domains.NewHouseImage(url, house.ID)
+		houseImage := models.NewHouseImage(url, house.ID)
 		db.Create(houseImage)
 	}
 }

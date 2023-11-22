@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"chaincue-real-estate-go/internal/domains"
+	"chaincue-real-estate-go/internal/models"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -20,10 +20,10 @@ func ConnectDB() {
 	}
 
 	err = db.AutoMigrate(
-		&domains.House{},
-		&domains.HouseImage{},
-		&domains.Broker{},
-		&domains.Country{},
+		&models.House{},
+		&models.HouseImage{},
+		&models.Broker{},
+		&models.Country{},
 	)
 
 	if err != nil {
