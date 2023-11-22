@@ -1,8 +1,12 @@
 package domains
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type Country struct {
+	gorm.Model
 	ID   string
 	Name CountryName
 }

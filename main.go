@@ -15,7 +15,14 @@ func main() {
 		db := configs.GetDB()
 		broker := domains.NewBroker("d")
 		db.Create(broker)
-		fmt.Println(broker)
+		country := domains.NewCountry(domains.SWEDEN)
+		db.Create(country)
+
+		//house := domains.NewHouse(domains.VILLA, utilities.URL1)
+		//db.Create(house)
+		//
+		//houseImage := domains.NewHouseImage(utilities.URL1, house.ID)
+		//db.Create(houseImage)
 
 		c.JSON(200, gin.H{
 			"message": "pong",

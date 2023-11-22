@@ -20,6 +20,8 @@ func ConnectDB() {
 	}
 
 	err = db.AutoMigrate(
+		&domains.House{},
+		&domains.HouseImage{},
 		&domains.Broker{},
 		&domains.Country{},
 	)
