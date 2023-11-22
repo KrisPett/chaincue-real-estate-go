@@ -11,7 +11,7 @@ type Broker struct {
 	Name        string
 	PhoneNumber string
 	Email       string
-	HouseID     string
+	HouseID     *string
 }
 
 func NewBroker(email string) *Broker {
@@ -20,6 +20,6 @@ func NewBroker(email string) *Broker {
 		Name:        "",
 		PhoneNumber: "",
 		Email:       email,
-		HouseID:     "",
+		HouseID:     nil,
 	}
 }
