@@ -66,7 +66,6 @@ func toHomePageDTO(dtoBuilder DTOBuilder) HomePageDTO {
 func convertCountries(countries []models.Country) []CountryDTO {
 	var result []CountryDTO
 	for _, country := range countries {
-
 		result = append(result, toCountryDTO(country))
 	}
 	return result
