@@ -5,6 +5,7 @@ import (
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
 	"github.com/gin-gonic/gin"
 	"log"
+	"sync"
 )
 
 type HousesPageDTO struct {
@@ -49,13 +50,24 @@ func buildDTO(additionalProcessing func(*DTOBuilder)) HousesPageDTO {
 		additionalProcessing(&dtoBuilder)
 	}
 
-	dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
-		dtoBuilder.Countries = countries
-	})(&dtoBuilder)
+	var wg sync.WaitGroup
+	wg.Add(2)
 
-	dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
-		dtoBuilder.Houses = houses
-	})(&dtoBuilder)
+	go func() {
+		defer wg.Done()
+		dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
+			dtoBuilder.Countries = countries
+		})(&dtoBuilder)
+	}()
+
+	go func() {
+		defer wg.Done()
+		dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
+			dtoBuilder.Houses = houses
+		})(&dtoBuilder)
+	}()
+
+	wg.Wait()
 
 	return toHomePageDTO(dtoBuilder)
 }
