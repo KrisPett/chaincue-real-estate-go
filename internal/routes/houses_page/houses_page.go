@@ -38,12 +38,16 @@ func RegisterHousesPageRoutes(router *gin.Engine) {
 
 func housesPage(c *gin.Context) {
 	log.Println("housesPage")
-	toDTO := updateDTOBuilder()
+	toDTO := updateDTOBuilder(nil)
 	c.JSON(200, toDTO)
 }
 
-func updateDTOBuilder() HousesPageDTO {
+func updateDTOBuilder(additionalProcessing func(*DTOBuilder)) HousesPageDTO {
 	dtoBuilder := DTOBuilder{}
+
+	if additionalProcessing != nil {
+		additionalProcessing(&dtoBuilder)
+	}
 
 	dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
 		dtoBuilder.Countries = countries

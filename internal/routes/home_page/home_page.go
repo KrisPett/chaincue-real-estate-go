@@ -40,12 +40,16 @@ func RegisterHomePageRoutes(router *gin.Engine) {
 
 func homePage(c *gin.Context) {
 	log.Println("homePage")
-	toDTO := updateDTOBuilder()
+	toDTO := updateDTOBuilder(nil)
 	c.JSON(200, toDTO)
 }
 
-func updateDTOBuilder() HomePageDTO {
+func updateDTOBuilder(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 	dtoBuilder := DTOBuilder{}
+
+	if additionalProcessing != nil {
+		additionalProcessing(&dtoBuilder)
+	}
 
 	dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
 		dtoBuilder.Countries = countries

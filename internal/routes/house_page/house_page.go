@@ -44,12 +44,16 @@ func RegisterHousePageRoutes(router *gin.Engine) {
 func housePage(c *gin.Context) {
 	log.Println("housePage")
 	houseId := c.Param("houseId")
-	toDTO := updateDTOBuilder(houseId)
+	toDTO := updateDTOBuilder(nil, houseId)
 	c.JSON(200, toDTO)
 }
 
-func updateDTOBuilder(houseId string) HousePageDTO {
+func updateDTOBuilder(additionalProcessing func(*DTOBuilder), houseId string) HousePageDTO {
 	dtoBuilder := DTOBuilder{}
+
+	if additionalProcessing != nil {
+		additionalProcessing(&dtoBuilder)
+	}
 
 	dto_builder_helpers.UpdateDTOBuilderWithHouseByHouseId(houseId, func(dtoBuilder *DTOBuilder, house models.House) {
 		dtoBuilder.House = house
