@@ -3,11 +3,11 @@ package home_page
 import (
 	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"math"
 	"sort"
+	"sync"
 )
 
 type HomePageDTO struct {
@@ -41,7 +41,7 @@ func RegisterHomePageRoutes(router *gin.Engine) {
 
 func homePage(c *gin.Context) {
 	log.Println("homePage")
-	dto := buildDTO(nil)
+	dto := buildDTO(func(builder *DTOBuilder) {})
 	c.JSON(200, dto)
 }
 
@@ -52,19 +52,35 @@ func buildDTO(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 		additionalProcessing(&dtoBuilder)
 	}
 
-	go dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
-		fmt.Println("UpdateDTOBuilderWithCountries")
-		dtoBuilder.Countries = countries
-	})(&dtoBuilder)
+	var wg sync.WaitGroup
+	wg.Add(2)
+	countriesChannel := make(chan []models.Country)
+	housesChannel := make(chan []models.House)
 
-	go dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
-		fmt.Println("UpdateDTOBuilderWithHouses")
-		sort.Slice(houses, func(i, j int) bool {
-			return houses[i].CreatedAt.After(houses[j].CreatedAt)
-		})
-		numHouses := int(math.Min(6, float64(len(houses))))
-		dtoBuilder.Houses = houses[:numHouses]
-	})(&dtoBuilder)
+	go func() {
+		defer wg.Done()
+		dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
+			dtoBuilder.Countries = countries
+		})(&dtoBuilder)
+		close(countriesChannel)
+	}()
+
+	go func() {
+		defer wg.Done()
+		dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
+			sort.Slice(houses, func(i, j int) bool {
+				return houses[i].CreatedAt.After(houses[j].CreatedAt)
+			})
+			numHouses := int(math.Min(6, float64(len(houses))))
+			dtoBuilder.Houses = houses[:numHouses]
+		})(&dtoBuilder)
+		close(housesChannel)
+	}()
+
+	go func() {
+		wg.Wait()
+	}()
+	_, _ = <-countriesChannel, <-housesChannel
 
 	return toHomePageDTO(dtoBuilder)
 }
