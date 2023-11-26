@@ -1,17 +1,15 @@
-package home_page
+package houses_page
 
 import (
 	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
 	"github.com/gin-gonic/gin"
 	"log"
-	"math"
-	"sort"
 )
 
-type HomePageDTO struct {
-	Countries           []CountryDTO `json:"countries"`
-	RecentlyAddedHouses []HouseDTO   `json:"recentlyAddedHouses"`
+type HousesPageDTO struct {
+	Countries []CountryDTO `json:"countries"`
+	Houses    []HouseDTO   `json:"houses"`
 }
 
 type CountryDTO struct {
@@ -34,17 +32,17 @@ type DTOBuilder struct {
 	Houses    []models.House
 }
 
-func RegisterHomePageRoutes(router *gin.Engine) {
-	router.GET("/home", homePage)
+func RegisterHousesPageRoutes(router *gin.Engine) {
+	router.GET("/houses", housesPage)
 }
 
-func homePage(c *gin.Context) {
-	log.Println("homePage")
+func housesPage(c *gin.Context) {
+	log.Println("housesPage")
 	toDTO := updateDTOBuilder()
 	c.JSON(200, toDTO)
 }
 
-func updateDTOBuilder() HomePageDTO {
+func updateDTOBuilder() HousesPageDTO {
 	dtoBuilder := DTOBuilder{}
 
 	dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
@@ -52,20 +50,16 @@ func updateDTOBuilder() HomePageDTO {
 	})(&dtoBuilder)
 
 	dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
-		sort.Slice(houses, func(i, j int) bool {
-			return houses[i].CreatedAt.After(houses[j].CreatedAt)
-		})
-		numHouses := int(math.Min(6, float64(len(houses))))
-		dtoBuilder.Houses = houses[:numHouses]
+		dtoBuilder.Houses = houses
 	})(&dtoBuilder)
 
 	return toHomePageDTO(dtoBuilder)
 }
 
-func toHomePageDTO(dtoBuilder DTOBuilder) HomePageDTO {
-	return HomePageDTO{
-		Countries:           convertCountries(dtoBuilder.Countries),
-		RecentlyAddedHouses: convertHouses(dtoBuilder.Houses),
+func toHomePageDTO(dtoBuilder DTOBuilder) HousesPageDTO {
+	return HousesPageDTO{
+		Countries: convertCountries(dtoBuilder.Countries),
+		Houses:    convertHouses(dtoBuilder.Houses),
 	}
 }
 

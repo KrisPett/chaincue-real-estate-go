@@ -15,7 +15,7 @@ func InitData() {
 	}
 
 	/*Broker*/
-	broker := models.NewBroker("d")
+	broker := models.NewBroker("John Doe")
 	db.Create(broker)
 
 	/*Country*/
@@ -27,6 +27,10 @@ func InitData() {
 	/*House*/
 	for i := 0; i < 18; i++ {
 		house := models.NewHouse(models.VILLA, utilities.URLFrontImage1)
+		house.Location = "Spain, Málaga"
+		house.NumberRooms = 3
+		house.Beds = 2
+		house.Price = "$969 384"
 		saveHouseWithImages(db, house, broker)
 	}
 }

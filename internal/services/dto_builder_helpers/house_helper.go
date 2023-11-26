@@ -13,7 +13,7 @@ func UpdateDTOBuilderWithHouses[B any](setHouses func(*B, []models.House)) func(
 	}
 }
 
-func updateDTOBuilderWithHouseByHouseId[B any](houseId string, setHouse func(*B, models.House)) func(*B) {
+func UpdateDTOBuilderWithHouseByHouseId[B any](houseId string, setHouse func(*B, models.House)) func(*B) {
 	return func(dtoBuilder *B) {
 		houseService := services.UseHouseService()
 		house, _ := houseService.FindById(houseId)
