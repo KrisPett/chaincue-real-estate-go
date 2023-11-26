@@ -19,11 +19,11 @@ func RegisterAccountPageRoutes(router *gin.Engine) {
 
 func accountPage(c *gin.Context) {
 	log.Println("accountPage")
-	toDTO := updateDTOBuilder(nil)
-	c.JSON(200, toDTO)
+	dto := buildDTO(nil)
+	c.JSON(200, dto)
 }
 
-func updateDTOBuilder(additionalProcessing func(*DTOBuilder)) AccountPageDTO {
+func buildDTO(additionalProcessing func(*DTOBuilder)) AccountPageDTO {
 	dtoBuilder := DTOBuilder{}
 
 	if additionalProcessing != nil {

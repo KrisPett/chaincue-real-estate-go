@@ -40,11 +40,11 @@ func RegisterHomePageRoutes(router *gin.Engine) {
 
 func homePage(c *gin.Context) {
 	log.Println("homePage")
-	toDTO := updateDTOBuilder(nil)
-	c.JSON(200, toDTO)
+	dto := buildDTO(nil)
+	c.JSON(200, dto)
 }
 
-func updateDTOBuilder(additionalProcessing func(*DTOBuilder)) HomePageDTO {
+func buildDTO(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 	dtoBuilder := DTOBuilder{}
 
 	if additionalProcessing != nil {
