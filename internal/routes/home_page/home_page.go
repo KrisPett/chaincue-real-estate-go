@@ -3,6 +3,7 @@ package home_page
 import (
 	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
 	"math"
@@ -51,11 +52,13 @@ func buildDTO(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 		additionalProcessing(&dtoBuilder)
 	}
 
-	dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
+	go dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
+		fmt.Println("UpdateDTOBuilderWithCountries")
 		dtoBuilder.Countries = countries
 	})(&dtoBuilder)
 
-	dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
+	go dto_builder_helpers.UpdateDTOBuilderWithHouses(func(dtoBuilder *DTOBuilder, houses []models.House) {
+		fmt.Println("UpdateDTOBuilderWithHouses")
 		sort.Slice(houses, func(i, j int) bool {
 			return houses[i].CreatedAt.After(houses[j].CreatedAt)
 		})
