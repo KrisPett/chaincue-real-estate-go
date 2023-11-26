@@ -83,6 +83,9 @@ func convertHouseImages(countries []models.HouseImage) []HouseImageDTO {
 }
 
 func toBrokerDTO(broker *models.Broker) *BrokerDTO {
+	if broker == nil {
+		return nil
+	}
 	return &BrokerDTO{
 		ID:          broker.ID,
 		Name:        broker.Name,

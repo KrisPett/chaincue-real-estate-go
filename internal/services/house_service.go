@@ -36,7 +36,7 @@ func (s *HouseService) FindAll() ([]models.House, error) {
 
 func (s *HouseService) FindById(id string) (models.House, error) {
 	var house models.House
-	result := s.db.Preload("HouseImages").Preload("Broker").First(&house, id)
+	result := s.db.Preload("HouseImages").Preload("Broker").First(&house, &id)
 	if result.Error != nil {
 		return models.House{}, result.Error
 	}

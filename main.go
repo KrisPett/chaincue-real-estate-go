@@ -2,6 +2,7 @@ package main
 
 import (
 	"chaincue-real-estate-go/internal/configs"
+	"chaincue-real-estate-go/internal/routes/account_page"
 	"chaincue-real-estate-go/internal/routes/home_page"
 	"chaincue-real-estate-go/internal/routes/house_page"
 	"chaincue-real-estate-go/internal/routes/houses_page"
@@ -17,6 +18,7 @@ func main() {
 	home_page.RegisterHomePageRoutes(r)
 	houses_page.RegisterHousesPageRoutes(r)
 	house_page.RegisterHousePageRoutes(r)
+	account_page.RegisterAccountPageRoutes(r)
 
 	if err := r.Run(":8080"); err != nil {
 		fmt.Println("Error:", err)
