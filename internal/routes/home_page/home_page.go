@@ -54,15 +54,12 @@ func buildDTO(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 
 	var wg sync.WaitGroup
 	wg.Add(2)
-	countriesChannel := make(chan []models.Country)
-	housesChannel := make(chan []models.House)
 
 	go func() {
 		defer wg.Done()
 		dto_builder_helpers.UpdateDTOBuilderWithCountries(func(dtoBuilder *DTOBuilder, countries []models.Country) {
 			dtoBuilder.Countries = countries
 		})(&dtoBuilder)
-		close(countriesChannel)
 	}()
 
 	go func() {
@@ -74,13 +71,9 @@ func buildDTO(additionalProcessing func(*DTOBuilder)) HomePageDTO {
 			numHouses := int(math.Min(6, float64(len(houses))))
 			dtoBuilder.Houses = houses[:numHouses]
 		})(&dtoBuilder)
-		close(housesChannel)
 	}()
 
-	go func() {
-		wg.Wait()
-	}()
-	_, _ = <-countriesChannel, <-housesChannel
+	wg.Wait()
 
 	return toHomePageDTO(dtoBuilder)
 }
