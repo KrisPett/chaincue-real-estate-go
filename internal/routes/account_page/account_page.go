@@ -19,7 +19,7 @@ func RegisterAccountPageRoutes(router *gin.Engine) {
 
 func accountPage(c *gin.Context) {
 	log.Println("accountPage")
-	dto := buildDTO(nil)
+	dto := buildDTO(func(builder *DTOBuilder) {})
 	c.JSON(200, dto)
 }
 

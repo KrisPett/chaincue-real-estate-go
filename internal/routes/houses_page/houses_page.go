@@ -38,7 +38,7 @@ func RegisterHousesPageRoutes(router *gin.Engine) {
 
 func housesPage(c *gin.Context) {
 	log.Println("housesPage")
-	dto := buildDTO(nil)
+	dto := buildDTO(func(builder *DTOBuilder) {})
 	c.JSON(200, dto)
 }
 
