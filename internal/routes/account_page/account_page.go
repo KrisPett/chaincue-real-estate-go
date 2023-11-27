@@ -1,6 +1,7 @@
 package account_page
 
 import (
+	"chaincue-real-estate-go/internal/configs"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -14,7 +15,9 @@ type DTOBuilder struct {
 }
 
 func RegisterAccountPageRoutes(router *gin.Engine) {
-	router.GET("/account", accountPage)
+	router.GET("/account", configs.ProtectRoute, accountPage)
+	/*TODO */
+	//router.Use(configs.ProtectRoute)
 }
 
 func accountPage(c *gin.Context) {
