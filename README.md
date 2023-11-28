@@ -14,6 +14,7 @@ docker exec -it postgres-monolith psql -U admin -d postgres -c "CREATE DATABASE 
 ```
 touch .env .env.test
 
+CORS_ALLOW_ORIGINS=http://localhost:3000
 OAUTH_CLIENT_ID=client-name
 OAUTH_CLIENT_SECRET=...
 OAUTH_AUTH_URL=https://example.com/auth/realms/client-name/protocol/openid-connect/auth

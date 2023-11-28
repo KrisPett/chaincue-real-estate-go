@@ -7,7 +7,6 @@ import (
 	"chaincue-real-estate-go/internal/routes/house_page"
 	"chaincue-real-estate-go/internal/routes/houses_page"
 	"fmt"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,12 +16,7 @@ func main() {
 
 	router := gin.Default()
 
-	//Cors
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000"}
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Authorization", "Content-Type", "X-CSRF-Token"}
-	router.Use(cors.New(config))
+	configs.SetupCORS(router)
 
 	//AnonymousRoutes
 	home_page.RegisterHomePageRoutes(router)
