@@ -17,16 +17,26 @@ func main() {
 
 	router := gin.Default()
 
+	//Cors
 	config := cors.DefaultConfig()
 	config.AllowOrigins = []string{"http://localhost:3000"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Authorization", "Content-Type", "X-CSRF-Token"}
 	router.Use(cors.New(config))
 
+	//AnonymousRoutes
 	home_page.RegisterHomePageRoutes(router)
 	houses_page.RegisterHousesPageRoutes(router)
 	house_page.RegisterHousePageRoutes(router)
-	account_page.RegisterAccountPageRoutes(router)
+
+	//UserAuthenticatedRoutes
+	userRoutes := router.Group("/user")
+	userRoutes.Use(func(c *gin.Context) {
+		configs.AuthenticateRoutes(c, "user")
+	})
+	{
+		account_page.RegisterAccountPageRoutes(userRoutes)
+	}
 
 	if err := router.Run(":8080"); err != nil {
 		fmt.Println("Error:", err)
