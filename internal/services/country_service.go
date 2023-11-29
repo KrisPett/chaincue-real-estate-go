@@ -13,7 +13,7 @@ type CountryServiceI interface {
 
 type CountryService struct{ db *gorm.DB }
 
-func UseCountryService() CountryServiceI { return &CountryService{db: configs.GetDB()} }
+func UseCountryService() CountryServiceI { return &CountryService{db: configs.GetPostgresDB()} }
 
 func (s *CountryService) Create(countryName models.CountryName) error {
 	broker := models.NewCountry(countryName)

@@ -12,4 +12,18 @@ services:
       POSTGRES_PASSWORD: admin
     ports:
       - "5432:5432"
+    networks:
+      - chaincue-real-estate-network
 
+  redis:
+    container_name: chaincue-real-estate-redis
+    image: redis:7.2.3
+    ports:
+      - "6379:6379"
+    networks:
+      - chaincue-real-estate-network
+
+networks:
+  chaincue-real-estate-network:
+    driver: bridge
+    name: chaincue-real-estate-network

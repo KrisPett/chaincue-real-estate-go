@@ -11,11 +11,11 @@ import (
 )
 
 func main() {
-	configs.ConnectDB()
+	configs.ConnectPostgres()
 	configs.InitData()
+	configs.ConnectRedis()
 
 	router := gin.Default()
-
 	configs.SetupCORS(router)
 
 	//AnonymousRoutes

@@ -2,11 +2,13 @@ package configs
 
 import (
 	"chaincue-real-estate-go/internal/utilities"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 	"golang.org/x/oauth2"
 	"io"
 	"log"
@@ -14,6 +16,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 func AuthenticateRoutes(c *gin.Context, roles ...string) {
@@ -23,11 +26,18 @@ func AuthenticateRoutes(c *gin.Context, roles ...string) {
 		return
 	}
 
-	token := utilities.GetToken(authHeader)
+	token := utilities.TrimAndGetToken(authHeader)
 
-	introspectionResponse, err := introspectToken(c, token)
+	introspectionResponse, err := getFromCache(c, token)
 	if err != nil {
-		return
+		introspectionResponse, err = introspectToken(c, token)
+		if err != nil {
+			return
+		}
+		err = cacheIntrospectionResponse(c, token, introspectionResponse)
+		if err != nil {
+			log.Printf("Error caching introspection response: %v", err)
+		}
 	}
 
 	if err := checkTokenValidity(introspectionResponse, c); err != nil {
@@ -40,6 +50,41 @@ func AuthenticateRoutes(c *gin.Context, roles ...string) {
 
 	username, _ := introspectionResponse["sub"].(string)
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("Authenticated endpoint for user: %s", username)})
+}
+
+func getFromCache(ctx context.Context, token string) (map[string]interface{}, error) {
+	result, err := redisClient.Get(ctx, token).Result()
+	if err == redis.Nil {
+		return nil, err
+	} else if err != nil {
+		log.Printf("Error retrieving from cache: %v", err)
+		return nil, err
+	}
+
+	var introspectionResponse map[string]interface{}
+	err = json.Unmarshal([]byte(result), &introspectionResponse)
+	if err != nil {
+		log.Printf("Error decoding introspection response from cache: %v", err)
+		return nil, err
+	}
+
+	return introspectionResponse, nil
+}
+
+func cacheIntrospectionResponse(ctx context.Context, token string, response map[string]interface{}) error {
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		log.Printf("Error encoding introspection response: %v", err)
+		return err
+	}
+
+	err = redisClient.Set(ctx, token, jsonResponse, 5*time.Minute).Err()
+	if err != nil {
+		log.Printf("Error caching introspection response: %v", err)
+		return err
+	}
+
+	return nil
 }
 
 func introspectToken(c *gin.Context, token string) (map[string]interface{}, error) {
@@ -65,12 +110,15 @@ func introspectToken(c *gin.Context, token string) (map[string]interface{}, erro
 		"client_secret": {oauthConfig.ClientSecret},
 		"token":         {token},
 	}
+
 	introspectURL := os.Getenv("OAUTH_INTROSPECT_URL")
 	resp, err := client.Post(introspectURL, "application/x-www-form-urlencoded", strings.NewReader(data.Encode()))
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error validating token: %v", err)})
 		return nil, err
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
@@ -79,6 +127,7 @@ func introspectToken(c *gin.Context, token string) (map[string]interface{}, erro
 	}(resp.Body)
 
 	var introspectionResponse map[string]interface{}
+
 	if err := json.NewDecoder(resp.Body).Decode(&introspectionResponse); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error decoding introspection response: %v", err)})
 		return nil, err

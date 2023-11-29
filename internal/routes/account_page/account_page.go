@@ -22,7 +22,7 @@ func RegisterAccountPageRoutes(router *gin.RouterGroup) {
 func accountPage(c *gin.Context) {
 	log.Println("accountPage")
 	authHeader := c.GetHeader("Authorization")
-	token := utilities.GetToken(authHeader)
+	token := utilities.TrimAndGetToken(authHeader)
 	dto := buildDTO(token, func(builder *DTOBuilder) {})
 	c.JSON(200, dto)
 }

@@ -14,7 +14,7 @@ type HouseServiceI interface {
 
 type HouseService struct{ db *gorm.DB }
 
-func UseHouseService() HouseServiceI { return &HouseService{db: configs.GetDB()} }
+func UseHouseService() HouseServiceI { return &HouseService{db: configs.GetPostgresDB()} }
 
 func (s *HouseService) Create(houseTypes models.HouseTypes, src string) error {
 	house := models.NewHouse(houseTypes, src)

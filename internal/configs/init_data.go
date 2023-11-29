@@ -8,7 +8,7 @@ import (
 )
 
 func InitData() {
-	db := GetDB()
+	db := GetPostgresDB()
 	result := db.Exec(`DELETE FROM brokers; DELETE FROM house_images; DELETE FROM houses; DELETE FROM countries;`)
 	if result.Error != nil {
 		log.Fatal(result.Error)

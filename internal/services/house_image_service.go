@@ -14,7 +14,9 @@ type HouseImageServiceI interface {
 
 type HouseImageService struct{ db *gorm.DB }
 
-func UseHouseImageService() HouseImageServiceI { return &HouseImageService{db: configs.GetDB()} }
+func UseHouseImageService() HouseImageServiceI {
+	return &HouseImageService{db: configs.GetPostgresDB()}
+}
 
 func (s *HouseImageService) Create(url string, houseID string) error {
 	broker := models.NewHouseImage(url, houseID)

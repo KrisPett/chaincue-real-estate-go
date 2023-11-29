@@ -1,6 +1,9 @@
 package utilities
 
 import (
+	"crypto/rand"
+	"crypto/rsa"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -8,7 +11,7 @@ import (
 func TestGetToken(t *testing.T) {
 	accessToken := "Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJ1U0Z3MXdWZ3JOUVJqOXdnNjdQUXNTbmxMV1RxTmd5Ry1tZkdIQ0pvby0wIn0.eyJleHAiOjE3MDExOTc0OTYsImlhdCI6MTcwMTE5NzE5NiwiYXV0aF90aW1lIjoxNzAxMTk2MjE1LCJqdGkiOiI1ODVhZjBlMC1mZTZiLTRiZGUtOWNjOS00YzI1YmI5MTgzNmEiLCJpc3MiOiJodHRwczovL2F1dGguY2hhaW5jdWV0LmNvbS9hdXRoL3JlYWxtcy9yZWFsLWVzdGF0ZSIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiJkOWUyNzZmYS1jZGUyLTQ4ZjQtOWY3Yy1jZDY5OTA3MDE5MGMiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJyZWFsLWVzdGF0ZS1jbGllbnQiLCJzZXNzaW9uX3N0YXRlIjoiZjAwYTVjNzYtOGFjMy00Zjc2LTg4NWUtZWE1NzM5NWFkMjI2IiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsImRlZmF1bHQtcm9sZXMtcmVhbC1lc3RhdGUiLCJ1bWFfYXV0aG9yaXphdGlvbiIsInVzZXIiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCBlbWFpbCBwcm9maWxlIiwic2lkIjoiZjAwYTVjNzYtOGFjMy00Zjc2LTg4NWUtZWE1NzM5NWFkMjI2IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5hbWUiOiJ0ZXN0dXNlciB1c2VyIiwicHJlZmVycmVkX3VzZXJuYW1lIjoidGVzdHVzZXJAY2hhaW5jdWUuY29tIiwiZ2l2ZW5fbmFtZSI6InRlc3R1c2VyIiwiZmFtaWx5X25hbWUiOiJ1c2VyIiwiZW1haWwiOiJ0ZXN0dXNlckBjaGFpbmN1ZS5jb20ifQ.rYvIxYzzkheT5IFSGlUHLGFrqBNkXOugwJJrC335I3qJYu0e35XjiECI560UGtjlhrIc0vVj_IkfZ3e9bbkhHeugNN9yX3xE1Sm9BnRsTodhH8JE3dQ05hI3Kp7fJHZVt6yLfaR9t5Yytey0KFPGiIi3UVAVy51nUxy9wPzzT4uS4YQ1Akm8y4OA95yK3FrrAm4WYqUfNbU88AyynXopxuiZyNiV4NLmN128hsfSBcuAb3_PpZHWutA3MYUzwe1PnSGE6dRi-FxbQyw2sy9YLZutDXIdLPJIePqr7Gic5h-WRLeAJXAWpDTwW1XHbHAbzjNROVfmMgvAKDiITkcmGQ"
 
-	result := GetToken(accessToken)
+	result := TrimAndGetToken(accessToken)
 
 	assert.NotContains(t, result, "Bearer ", "Token should not contain 'Bearer '")
 }
@@ -20,4 +23,18 @@ func TestGetSubFromToken(t *testing.T) {
 	result, _ := GetSubFromToken(accessToken)
 
 	assert.Equal(t, expectedResult, result, "Sub should be equal to expected result")
+}
+
+func TestGenerateToken(t *testing.T) {
+
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Errorf("Error generating private key: %v", err)
+	}
+
+	result, err := GenerateToken(privateKey)
+	fmt.Println(result)
+
+	assert.NoError(t, err)
+	assert.NotEmpty(t, result)
 }

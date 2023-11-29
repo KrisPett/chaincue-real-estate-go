@@ -12,7 +12,7 @@ type BrokerServiceI interface {
 
 type BrokerService struct{ db *gorm.DB }
 
-func UseBrokerService() BrokerServiceI { return &BrokerService{db: configs.GetDB()} }
+func UseBrokerService() BrokerServiceI { return &BrokerService{db: configs.GetPostgresDB()} }
 
 func (s *BrokerService) Create(email string) error {
 	broker := models.NewBroker(email)
