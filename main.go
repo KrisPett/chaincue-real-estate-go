@@ -12,8 +12,8 @@ import (
 
 func main() {
 	configs.ConnectPostgres()
-	configs.InitData()
 	configs.ConnectRedis()
+	configs.InitData()
 
 	router := gin.Default()
 	configs.SetupCORS(router)

@@ -21,6 +21,7 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 
+/*TODO env postgres redis*/
 func ConnectPostgres() {
 	var err error
 	postgresDB, err = gorm.Open(postgres.New(postgres.Config{

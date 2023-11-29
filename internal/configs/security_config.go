@@ -30,26 +30,24 @@ func AuthenticateRoutes(c *gin.Context, roles ...string) {
 
 	introspectionResponse, err := getFromCache(c, token)
 	if err != nil {
-		introspectionResponse, err = introspectToken(c, token)
+		introspectionResponse, err = introspectTokenIfCacheMiss(c, token)
 		if err != nil {
 			return
 		}
+
+		if err := checkTokenValidity(introspectionResponse, c); err != nil {
+			return
+		}
+
 		err = cacheIntrospectionResponse(c, token, introspectionResponse)
 		if err != nil {
 			log.Printf("Error caching introspection response: %v", err)
 		}
 	}
 
-	if err := checkTokenValidity(introspectionResponse, c); err != nil {
-		return
-	}
-
 	if err := checkRolesAccess(introspectionResponse, roles, c); err != nil {
 		return
 	}
-
-	username, _ := introspectionResponse["sub"].(string)
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("Authenticated endpoint for user: %s", username)})
 }
 
 func getFromCache(ctx context.Context, token string) (map[string]interface{}, error) {
@@ -72,13 +70,26 @@ func getFromCache(ctx context.Context, token string) (map[string]interface{}, er
 }
 
 func cacheIntrospectionResponse(ctx context.Context, token string, response map[string]interface{}) error {
+	expirationTime, okExp := response["exp"].(float64)
+	issuedAtTime, okIat := response["iat"].(float64)
+
+	if !okExp || !okIat || expirationTime <= issuedAtTime {
+		log.Println("Error extracting or invalid expiration/issued at times from introspection response")
+		return errors.New("Error extracting or invalid expiration/issued at times from introspection response")
+	}
+
+	expiration := time.Unix(int64(expirationTime), 0)
+	issuedAt := time.Unix(int64(issuedAtTime), 0)
+
+	durationUntilExpiration := expiration.Sub(issuedAt)
+
 	jsonResponse, err := json.Marshal(response)
 	if err != nil {
 		log.Printf("Error encoding introspection response: %v", err)
 		return err
 	}
 
-	err = redisClient.Set(ctx, token, jsonResponse, 5*time.Minute).Err()
+	err = redisClient.Set(ctx, token, jsonResponse, durationUntilExpiration).Err()
 	if err != nil {
 		log.Printf("Error caching introspection response: %v", err)
 		return err
@@ -87,7 +98,7 @@ func cacheIntrospectionResponse(ctx context.Context, token string, response map[
 	return nil
 }
 
-func introspectToken(c *gin.Context, token string) (map[string]interface{}, error) {
+func introspectTokenIfCacheMiss(c *gin.Context, token string) (map[string]interface{}, error) {
 	if err := godotenv.Load(".env"); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Error loading .env file: %v", err)})
 		log.Fatal("Error loading .env file: ", err)
