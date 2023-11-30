@@ -4,9 +4,12 @@ import (
 	"chaincue-real-estate-go/internal/models"
 	"context"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 var postgresDB *gorm.DB
@@ -21,11 +24,25 @@ func GetRedisClient() *redis.Client {
 	return redisClient
 }
 
-/*TODO env postgres redis*/
 func ConnectPostgres() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Error loading .env file: ", err)
+	}
+
+	postgresHost := os.Getenv("POSTGRES_HOST")
+	postgresUser := os.Getenv("POSTGRES_USER")
+	postgresPassword := os.Getenv("POSTGRES_PASSWORD")
+	postgresDBName := os.Getenv("POSTGRES_DB")
+	postgresPort := os.Getenv("POSTGRES_PORT")
+
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		postgresHost, postgresUser, postgresPassword, postgresDBName, postgresPort,
+	)
+
 	var err error
 	postgresDB, err = gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=localhost user=admin password=admin dbname=chaincue-real-estate-db port=5432 sslmode=disable",
+		DSN:                  dsn,
 		PreferSimpleProtocol: true,
 	}), &gorm.Config{})
 	if err != nil {
@@ -46,9 +63,18 @@ func ConnectPostgres() {
 }
 
 func ConnectRedis() {
+	if err := godotenv.Load(".env"); err != nil {
+		log.Fatal("Error loading .env file: ", err)
+	}
+
+	redisPassword := os.Getenv("REDIS_PASSWORD")
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+
+	redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
+		Addr:     redisAddr,
+		Password: redisPassword,
 		DB:       0,
 	})
 
