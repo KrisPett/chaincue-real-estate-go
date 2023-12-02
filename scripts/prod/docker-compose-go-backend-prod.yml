@@ -1,0 +1,20 @@
+# docker compose -f docker-compose-go-backend-prod.yml up
+# docker compose -f docker-compose-go-backend-prod.yml down
+
+version: '3.9'
+
+services:
+  chaincue-real-estate-go-prod1:
+    container_name: chaincue-real-estate-go-prod1
+    image: ghcr.io/krispett/chaincue-real-estate-go:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - chaincue-real-estate-network
+    volumes:
+      - .env:/app/.env
+
+networks:
+  chaincue-real-estate-network:
+    driver: bridge
+    name: chaincue-real-estate-network
