@@ -4,8 +4,8 @@
 version: '3.9'
 
 services:
-  chaincue-real-estate-go-prod1:
-    container_name: chaincue-real-estate-go-prod1
+  chaincue-real-estate-go-prod:
+    container_name: chaincue-real-estate-go-prod
     image: ghcr.io/krispett/chaincue-real-estate-go:latest
     ports:
       - "8080:8080"
