@@ -50,7 +50,7 @@ OAUTH_AUTH_URL=https://example.com/auth/realms/client-name/protocol/openid-conne
 OAUTH_TOKEN_URL=https://example.com/auth/realms/client-name/protocol/openid-connect/token
 OAUTH_INTROSPECT_URL=https://example.com/auth/realms/client-name/protocol/openid-connect/token/introspect
 
-POSTGRES_HOST=postgres-monolith
+POSTGRES_HOST=chaincue-real-estate-postgres
 POSTGRES_PORT=5432
 POSTGRES_DB=chaincue-real-estate-db
 POSTGRES_USER=admin
