@@ -1,5 +1,6 @@
 # docker compose up -d
 # docker exec -it postgres-monolith psql -U admin -d postgres -c "CREATE DATABASE \"chaincue-real-estate-db\";"
+# docker exec -it chaincue-real-estate-redis redis-cli -a redis -c "FLUSHALL"
 
 version: '3.9'
 services:
