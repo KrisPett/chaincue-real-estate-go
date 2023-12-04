@@ -4,12 +4,14 @@ import (
 	"chaincue-real-estate-go/internal/configs"
 	"chaincue-real-estate-go/internal/models"
 	"gorm.io/gorm"
+	"log"
 )
 
 type HouseServiceI interface {
 	Create(houseTypes models.HouseTypes, src string) error
 	FindAll() ([]models.House, error)
 	FindById(id string) (models.House, error)
+	SearchHouses(country string, textAreaSearchValue string, houseTypes []string) ([]models.House, error)
 }
 
 type HouseService struct{ db *gorm.DB }
@@ -41,4 +43,28 @@ func (s *HouseService) FindById(id string) (models.House, error) {
 		return models.House{}, result.Error
 	}
 	return house, nil
+}
+
+func (s *HouseService) SearchHouses(country string, textAreaSearchValue string, houseTypes []string) ([]models.House, error) {
+	log.Println("SearchHouses")
+	log.Println(country)
+	log.Println(houseTypes)
+
+	var houses []models.House
+
+	tx := s.db
+
+	if country != "" {
+		tx = tx.Where("location = ?", country)
+	}
+
+	if len(houseTypes) > 0 {
+		tx = tx.Where("house_types IN (?)", houseTypes)
+	}
+
+	if err := tx.Find(&houses).Error; err != nil {
+		return nil, err
+	}
+
+	return houses, nil
 }

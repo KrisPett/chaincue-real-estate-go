@@ -2,8 +2,10 @@ package houses_page
 
 import (
 	"chaincue-real-estate-go/internal/models"
+	"chaincue-real-estate-go/internal/services"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
 	"chaincue-real-estate-go/internal/utilities"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
 	"sync"
@@ -35,14 +37,42 @@ type DTOBuilder struct {
 	Houses    []models.House
 }
 
+type FilterSearchReqBody struct {
+	Country             string   `json:"country"`
+	TextAreaSearchValue string   `json:"textAreaSearchValue"`
+	HouseTypes          []string `json:"houseTypes"`
+}
+
 func RegisterHousesPageRoutes(router *gin.Engine) {
 	router.GET("/houses", housesPage)
+	router.PUT("/houses", searchHouses)
 }
 
 func housesPage(c *gin.Context) {
 	log.Println("housesPage")
 	dto := buildDTO(func(builder *DTOBuilder) {})
 	c.JSON(200, dto)
+}
+
+func searchHouses(c *gin.Context) {
+	houseService := services.UseHouseService()
+	log.Println("searchHouses")
+
+	body, err := c.GetRawData()
+	if err != nil {
+		c.JSON(400, gin.H{"error": "Error reading request body"})
+		return
+	}
+
+	var reqBody FilterSearchReqBody
+	if err := json.Unmarshal(body, &reqBody); err != nil {
+		c.JSON(400, gin.H{"error": "Error decoding JSON data"})
+		return
+	}
+
+	houses, err := houseService.SearchHouses(reqBody.Country, reqBody.TextAreaSearchValue, reqBody.HouseTypes)
+
+	c.JSON(200, houses)
 }
 
 func buildDTO(additionalProcessing func(*DTOBuilder)) HousesPageDTO {
