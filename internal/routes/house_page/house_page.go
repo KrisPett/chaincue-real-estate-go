@@ -3,6 +3,7 @@ package house_page
 import (
 	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
+	"chaincue-real-estate-go/internal/utilities"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -66,7 +67,7 @@ func toHomePageDTO(dtoBuilder DTOBuilder) HousePageDTO {
 	return HousePageDTO{
 		ID:            dtoBuilder.House.ID,
 		Title:         dtoBuilder.House.Title,
-		Type:          string(dtoBuilder.House.HouseTypes),
+		Type:          utilities.FormatTitleCaseString(string(dtoBuilder.House.HouseTypes)),
 		Location:      dtoBuilder.House.Location,
 		NumberOfRooms: dtoBuilder.House.NumberRooms,
 		Beds:          dtoBuilder.House.Beds,

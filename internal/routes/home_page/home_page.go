@@ -3,6 +3,7 @@ package home_page
 import (
 	"chaincue-real-estate-go/internal/models"
 	"chaincue-real-estate-go/internal/services/dto_builder_helpers"
+	"chaincue-real-estate-go/internal/utilities"
 	"github.com/gin-gonic/gin"
 	"log"
 	"math"
@@ -23,6 +24,7 @@ type HouseDTO struct {
 	ID          string `json:"id"`
 	Title       string `json:"title"`
 	Location    string `json:"location"`
+	Type        string `json:"type"`
 	NumberRooms int    `json:"numberRooms"`
 	Beds        int    `json:"beds"`
 	DollarPrice string `json:"dollarPrice"`
@@ -112,6 +114,7 @@ func toHouseDTO(house models.House) HouseDTO {
 		ID:          house.ID,
 		Title:       house.Title,
 		Location:    house.Location,
+		Type:        utilities.FormatTitleCaseString(string(house.HouseTypes)),
 		NumberRooms: house.NumberRooms,
 		Beds:        house.Beds,
 		DollarPrice: house.Price,
