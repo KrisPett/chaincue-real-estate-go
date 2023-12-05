@@ -11,6 +11,8 @@ type House struct {
 	Title       string
 	Description string
 	Location    string
+	Country     string
+	City        string
 	NumberRooms int
 	Beds        int
 	Price       string
@@ -27,6 +29,8 @@ func NewHouse(houseTypes HouseTypes, src string) *House {
 		Title:       "",
 		Description: "",
 		Location:    "",
+		Country:     "",
+		City:        "",
 		NumberRooms: 0,
 		Beds:        0,
 		Price:       "",

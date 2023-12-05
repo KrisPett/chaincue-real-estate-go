@@ -51,20 +51,17 @@ func (s *HouseService) SearchHouses(country string, textAreaSearchValue string, 
 	log.Println(houseTypes)
 
 	var houses []models.House
-
 	tx := s.db
 
-	if country != "" {
-		tx = tx.Where("location = ?", country)
+	if country != "ANY" {
+		tx = tx.Where("country = ?", country)
 	}
 
 	if len(houseTypes) > 0 {
-		tx = tx.Where("house_types IN (?)", houseTypes)
+		tx = tx.Where("house_types IN ?", houseTypes)
 	}
 
-	if err := tx.Find(&houses).Error; err != nil {
-		return nil, err
-	}
+	tx.Find(&houses)
 
 	return houses, nil
 }

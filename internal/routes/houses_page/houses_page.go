@@ -71,8 +71,8 @@ func searchHouses(c *gin.Context) {
 	}
 
 	houses, err := houseService.SearchHouses(reqBody.Country, reqBody.TextAreaSearchValue, reqBody.HouseTypes)
-
-	c.JSON(200, houses)
+	dtos := convertHouses(houses)
+	c.JSON(200, dtos)
 }
 
 func buildDTO(additionalProcessing func(*DTOBuilder)) HousesPageDTO {
