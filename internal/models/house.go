@@ -15,7 +15,7 @@ type House struct {
 	City        string
 	NumberRooms int
 	Beds        int
-	Price       string
+	Price       int
 	Src         string `gorm:"not null"`
 	Sold        bool
 	HouseTypes  HouseTypes   `gorm:"not null"`
@@ -33,7 +33,7 @@ func NewHouse(houseTypes HouseTypes, src string) *House {
 		City:        "",
 		NumberRooms: 0,
 		Beds:        0,
-		Price:       "",
+		Price:       0,
 		Src:         src,
 		Sold:        false,
 		HouseTypes:  houseTypes,

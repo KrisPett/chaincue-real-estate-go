@@ -25,39 +25,39 @@ func InitData() {
 	db.Create(country2)
 
 	/*House*/
-	createHouse(db, broker, utilities.URLFrontImage1, models.VILLA, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage2, models.VILLA, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage3, models.VILLA, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage4, models.VILLA, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage5, models.VACATION_HOME, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage6, models.VACATION_HOME, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage1, models.VACATION_HOME, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage2, models.ESTATES_AND_FARMS, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage3, models.ESTATES_AND_FARMS, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage4, models.ESTATES_AND_FARMS, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage5, models.LAND, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage6, models.LAND, "Sweden, Stockholm", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage1, models.LAND, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage2, models.OTHER_HOUSES, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage3, models.OTHER_HOUSES, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage4, models.OTHER_HOUSES, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage5, models.TOWNHOUSE, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage6, models.TOWNHOUSE, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage1, models.TOWNHOUSE, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage2, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage3, models.CONDOMINIUM, "Sweden, Stockholm", "SWEDEN", "Stockholm")
-	createHouse(db, broker, utilities.URLFrontImage4, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga")
-	createHouse(db, broker, utilities.URLFrontImage5, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga")
+	createHouse(db, broker, utilities.URLFrontImage1, models.VILLA, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969381)
+	createHouse(db, broker, utilities.URLFrontImage2, models.VILLA, "Spain, Málaga", "SPAIN", "Málaga", 969382)
+	createHouse(db, broker, utilities.URLFrontImage3, models.VILLA, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969383)
+	createHouse(db, broker, utilities.URLFrontImage4, models.VILLA, "Spain, Málaga", "SPAIN", "Málaga", 969384)
+	createHouse(db, broker, utilities.URLFrontImage5, models.VACATION_HOME, "Spain, Málaga", "SPAIN", "Málaga", 969385)
+	createHouse(db, broker, utilities.URLFrontImage6, models.VACATION_HOME, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969386)
+	createHouse(db, broker, utilities.URLFrontImage1, models.VACATION_HOME, "Spain, Málaga", "SPAIN", "Málaga", 969387)
+	createHouse(db, broker, utilities.URLFrontImage2, models.ESTATES_AND_FARMS, "Spain, Málaga", "SPAIN", "Málaga", 969388)
+	createHouse(db, broker, utilities.URLFrontImage3, models.ESTATES_AND_FARMS, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969389)
+	createHouse(db, broker, utilities.URLFrontImage4, models.ESTATES_AND_FARMS, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969314)
+	createHouse(db, broker, utilities.URLFrontImage5, models.LAND, "Spain, Málaga", "SPAIN", "Málaga", 969324)
+	createHouse(db, broker, utilities.URLFrontImage6, models.LAND, "Sweden, Stockholm", "SPAIN", "Málaga", 969334)
+	createHouse(db, broker, utilities.URLFrontImage1, models.LAND, "Spain, Málaga", "SPAIN", "Málaga", 969334)
+	createHouse(db, broker, utilities.URLFrontImage2, models.OTHER_HOUSES, "Spain, Málaga", "SPAIN", "Málaga", 969344)
+	createHouse(db, broker, utilities.URLFrontImage3, models.OTHER_HOUSES, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969354)
+	createHouse(db, broker, utilities.URLFrontImage4, models.OTHER_HOUSES, "Spain, Málaga", "SPAIN", "Málaga", 969364)
+	createHouse(db, broker, utilities.URLFrontImage5, models.TOWNHOUSE, "Spain, Málaga", "SPAIN", "Málaga", 969374)
+	createHouse(db, broker, utilities.URLFrontImage6, models.TOWNHOUSE, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969384)
+	createHouse(db, broker, utilities.URLFrontImage1, models.TOWNHOUSE, "Spain, Málaga", "SPAIN", "Málaga", 969394)
+	createHouse(db, broker, utilities.URLFrontImage2, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga", 969184)
+	createHouse(db, broker, utilities.URLFrontImage3, models.CONDOMINIUM, "Sweden, Stockholm", "SWEDEN", "Stockholm", 969284)
+	createHouse(db, broker, utilities.URLFrontImage4, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga", 969384)
+	createHouse(db, broker, utilities.URLFrontImage5, models.CONDOMINIUM, "Spain, Málaga", "SPAIN", "Málaga", 969484)
 }
 
-func createHouse(db *gorm.DB, broker *models.Broker, url string, houseType models.HouseTypes, location string, country string, city string) {
+func createHouse(db *gorm.DB, broker *models.Broker, url string, houseType models.HouseTypes, location string, country string, city string, price int) {
 	house := models.NewHouse(houseType, url)
 	house.Location = location
 	house.Country = country
 	house.City = city
 	house.NumberRooms = 3
 	house.Beds = 2
-	house.Price = "$969 384"
+	house.Price = price
 	saveHouseWithImages(db, house, broker)
 }
 

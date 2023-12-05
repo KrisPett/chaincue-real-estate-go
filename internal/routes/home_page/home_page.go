@@ -8,6 +8,7 @@ import (
 	"log"
 	"math"
 	"sort"
+	"strconv"
 	"sync"
 )
 
@@ -117,7 +118,7 @@ func toHouseDTO(house models.House) HouseDTO {
 		Type:        utilities.FormatTitleCaseString(string(house.HouseTypes)),
 		NumberRooms: house.NumberRooms,
 		Beds:        house.Beds,
-		DollarPrice: house.Price,
+		DollarPrice: "$" + strconv.Itoa(house.Price),
 		CryptoPrice: "₿32.346",
 		Src:         house.Src,
 	}

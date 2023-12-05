@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"log"
+	"strconv"
 	"sync"
 )
 
@@ -41,6 +42,7 @@ type FilterSearchReqBody struct {
 	Country             string   `json:"country"`
 	TextAreaSearchValue string   `json:"textAreaSearchValue"`
 	HouseTypes          []string `json:"houseTypes"`
+	Sort                string   `json:"sort"`
 }
 
 func RegisterHousesPageRoutes(router *gin.Engine) {
@@ -70,9 +72,9 @@ func searchHouses(c *gin.Context) {
 		return
 	}
 
-	houses, err := houseService.SearchHouses(reqBody.Country, reqBody.TextAreaSearchValue, reqBody.HouseTypes)
-	dtos := convertHouses(houses)
-	c.JSON(200, dtos)
+	houses, err := houseService.SearchHouses(reqBody.Country, reqBody.TextAreaSearchValue, reqBody.HouseTypes, reqBody.Sort)
+	housesDTO := convertHouses(houses)
+	c.JSON(200, housesDTO)
 }
 
 func buildDTO(additionalProcessing func(*DTOBuilder)) HousesPageDTO {
@@ -141,7 +143,7 @@ func toHouseDTO(house models.House) HouseDTO {
 		Type:        utilities.FormatTitleCaseString(string(house.HouseTypes)),
 		NumberRooms: house.NumberRooms,
 		Beds:        house.Beds,
-		DollarPrice: house.Price,
+		DollarPrice: "$" + strconv.Itoa(house.Price),
 		CryptoPrice: "₿32.346",
 		Src:         house.Src,
 	}

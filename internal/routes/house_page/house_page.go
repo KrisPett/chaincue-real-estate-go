@@ -6,6 +6,7 @@ import (
 	"chaincue-real-estate-go/internal/utilities"
 	"github.com/gin-gonic/gin"
 	"log"
+	"strconv"
 )
 
 type HousePageDTO struct {
@@ -71,7 +72,7 @@ func toHomePageDTO(dtoBuilder DTOBuilder) HousePageDTO {
 		Location:      dtoBuilder.House.Location,
 		NumberOfRooms: dtoBuilder.House.NumberRooms,
 		Beds:          dtoBuilder.House.Beds,
-		DollarPrice:   dtoBuilder.House.Price,
+		DollarPrice:   "$" + strconv.Itoa(dtoBuilder.House.Price),
 		CryptoPrice:   "₿32.346",
 		Description:   dtoBuilder.House.Description,
 		Images:        convertHouseImages(dtoBuilder.House.HouseImages),
