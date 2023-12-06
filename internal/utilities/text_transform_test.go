@@ -16,9 +16,9 @@ func TestFormatString(t *testing.T) {
 	expected3 := "Condominium"
 
 	// When
-	actual1 := formatString(testString1)
-	actual2 := formatString(testString2)
-	actual3 := formatString(testString3)
+	actual1 := FormatTitleCaseString(testString1)
+	actual2 := FormatTitleCaseString(testString2)
+	actual3 := FormatTitleCaseString(testString3)
 
 	// Then
 	assert.Equal(t, expected1, actual1)
