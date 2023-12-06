@@ -52,6 +52,10 @@ func (s *HouseService) SearchHouses(country string, textAreaSearchValue string, 
 		tx = tx.Where("country = ?", country)
 	}
 
+	if textAreaSearchValue != "" {
+		tx = tx.Where("city LIKE ?", "%"+textAreaSearchValue+"%")
+	}
+
 	if len(houseTypes) > 0 {
 		tx = tx.Where("house_types IN ?", houseTypes)
 	}
