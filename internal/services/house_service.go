@@ -65,6 +65,8 @@ func (s *HouseService) SearchHouses(country string, textAreaSearchValue string, 
 		tx = tx.Order("price DESC")
 	case "price-asc":
 		tx = tx.Order("price ASC")
+	case "featured":
+		tx = tx.Order("price")
 	default:
 		tx = tx.Order("price")
 	}
