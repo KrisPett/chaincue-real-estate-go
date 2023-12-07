@@ -7,7 +7,7 @@ import (
 )
 
 type HouseImageServiceI interface {
-	Create(url string, houseID string) error
+	Create(houseImage *models.HouseImage) error
 	FindAll() ([]models.HouseImage, error)
 	FindById(id string) (models.HouseImage, error)
 }
@@ -18,9 +18,8 @@ func UseHouseImageService() HouseImageServiceI {
 	return &HouseImageService{db: configs.GetPostgresDB()}
 }
 
-func (s *HouseImageService) Create(url string, houseID string) error {
-	broker := models.NewHouseImage(url, houseID)
-	result := s.db.Create(broker)
+func (s *HouseImageService) Create(houseImage *models.HouseImage) error {
+	result := s.db.Create(houseImage)
 	if result.Error != nil {
 		return result.Error
 	}

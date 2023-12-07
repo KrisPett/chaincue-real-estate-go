@@ -57,8 +57,8 @@ func housesPage(c *gin.Context) {
 }
 
 func searchHouses(c *gin.Context) {
-	houseService := services.UseHouseService()
 	log.Println("searchHouses")
+	houseService := services.UseHouseService()
 
 	body, err := c.GetRawData()
 	if err != nil {

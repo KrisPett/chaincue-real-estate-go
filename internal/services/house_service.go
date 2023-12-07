@@ -7,7 +7,7 @@ import (
 )
 
 type HouseServiceI interface {
-	Create(houseTypes models.HouseTypes, src string) error
+	Create(house *models.House) error
 	FindAll() ([]models.House, error)
 	FindById(id string) (models.House, error)
 	SearchHouses(country string, textAreaSearchValue string, houseTypes []string, sort string) ([]models.House, error)
@@ -17,8 +17,7 @@ type HouseService struct{ db *gorm.DB }
 
 func UseHouseService() HouseServiceI { return &HouseService{db: configs.GetPostgresDB()} }
 
-func (s *HouseService) Create(houseTypes models.HouseTypes, src string) error {
-	house := models.NewHouse(houseTypes, src)
+func (s *HouseService) Create(house *models.House) error {
 	result := s.db.Create(house)
 	if result.Error != nil {
 		return result.Error

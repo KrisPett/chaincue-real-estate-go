@@ -3,6 +3,7 @@ package main
 import (
 	"chaincue-real-estate-go/internal/configs"
 	"chaincue-real-estate-go/internal/routes/account_page"
+	"chaincue-real-estate-go/internal/routes/add_property_page"
 	"chaincue-real-estate-go/internal/routes/home_page"
 	"chaincue-real-estate-go/internal/routes/house_page"
 	"chaincue-real-estate-go/internal/routes/houses_page"
@@ -30,6 +31,7 @@ func main() {
 	})
 	{
 		account_page.RegisterAccountPageRoutes(userRoutes)
+		add_property_page.RegisterAddPropertyPageRoutes(userRoutes)
 	}
 
 	if err := router.Run(":8080"); err != nil {
