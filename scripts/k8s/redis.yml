@@ -19,14 +19,6 @@ spec:
           ports:
             - containerPort: 6379
           command: [ "redis-server", "--requirepass", "redis" ]
-  volumeClaimTemplates:
-    - metadata:
-        name: redis-data
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 1Gi
 
 ---
 

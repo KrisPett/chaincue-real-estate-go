@@ -10,6 +10,7 @@ minikube ip -> sudo nano /etc/hosts -> "minikube_ip" local.chaincue.com
 ```
 
 kubectl -f postgres.yml apply
+kubectl exec -it postgres-backend-0 -- psql -U admin -d postgres -c "CREATE DATABASE \"chaincue-real-estate-postgres\";"
 
 kubectl -f redis.yml apply
 

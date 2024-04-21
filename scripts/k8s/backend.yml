@@ -9,12 +9,12 @@ data:
   OAUTH_AUTH_URL: "https://auth.chaincuet.com/auth/realms/real-estate/protocol/openid-connect/auth"
   OAUTH_TOKEN_URL: "https://auth.chaincuet.com/auth/realms/real-estate/protocol/openid-connect/token"
   OAUTH_INTROSPECT_URL: "https://auth.chaincuet.com/auth/realms/real-estate/protocol/openid-connect/token/introspect"
-  POSTGRES_HOST: "10.244.0.5" # IP
+  POSTGRES_HOST: "10.244.0.57" # IP
   POSTGRES_PORT: "5432"
   POSTGRES_DB: "chaincue-real-estate-postgres"
   POSTGRES_USER: "admin"
   POSTGRES_PASSWORD: "admin"
-  REDIS_HOST: "10.106.92.225" # Cluster IP
+  REDIS_HOST: "10.98.176.68" # Cluster IP
   REDIS_PASSWORD: "redis"
   REDIS_PORT: "6379"
 
