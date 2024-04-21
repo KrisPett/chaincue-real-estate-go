@@ -1,3 +1,5 @@
+kubectl delete all --all
+
 minikube image build -t chaincue-real-estate-go .
 minikube image ls
 minikube addons enable ingress
